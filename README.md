@@ -8,14 +8,14 @@ Local, keyword-grounded tagging workflow for the provided proposal descriptions.
 - `tagged_results.csv` — machine-readable output (one row per proposal).
 
 ## Taxonomy (derived from the sample data)
-- **Bridges & Structures** — Bridge replacement or rehab, culverts, structural repairs, painting, and approach work.
-- **Roadway Rehabilitation** — Resurfacing, mill-and-overlay, reconstruction, and pavement preservation.
-- **Capacity Expansion & Widening** — Adding lanes, roundabouts, new alignments, or other widening work.
-- **Operations & Maintenance** — Routine upkeep such as mowing, striping contracts, cleaning/painting, and traffic maintenance.
-- **Multimodal & Active Transportation** — Pedestrian/bicycle/shared-use facilities (sidewalks, paths, tunnels).
-- **Drainage & Flood Control** — Drainage, stormwater, flooding, storm sewer, culverts, erosion protection.
-- **Transport Facilities & Buildings** — Transportation-related facilities/buildings (terminals, stations, tunnels, civic square preservation).
-- **Signals, ITS & Lighting** — ITS, signals, lighting, and communications upgrades.
+- **Bridge & Replace** — Bridge replacement or deck rehabilitation projects, often with extensions and approach roadway fixes along river crossings.
+- **Pavement & Marking** — Pavement and marking packages covering concrete/asphalt sections with base repair and related drainage items.
+- **Resurfacing & Shoulder** — Mill-and-overlay or resurfacing jobs that rebuild shoulders and handle spot repairs across project mileposts.
+- **Preservation & Surface** — Surface preservation and maintenance programs across multiple counties, including concrete repairs and patching.
+- **River & South** — River corridor work involving grading, paving, and associated river-bridge elements, often with federal participation.
+- **Near & Valley** — Location-specific improvements near valley/district boundary lines, typically defined by begin/end markers.
+- **Interchange & Replacement** —  Interchange or roadway replacements with milling tied to specific mileposts and connecting streets
+- **Creek & Town** — Creek/town corridor improvements involving drainage, lane work, and bridge-related components.
 
 ## LangGraph workflow
 Graph: `ingest → tag → write → END`
