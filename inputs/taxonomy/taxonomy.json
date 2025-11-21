@@ -1,0 +1,119 @@
+[
+  {
+    "id": "bridge_1",
+    "name": "Bridge & Replace",
+    "definition": "Discovered topic characterized by: bridge, replace, replacement, roadway, river bridge.",
+    "keywords": [
+      "bridge",
+      "replace",
+      "replacement",
+      "roadway",
+      "river bridge",
+      "district",
+      "deck",
+      "bridge deck",
+      "extension"
+    ]
+  },
+  {
+    "id": "pavement_2",
+    "name": "Pavement & Marking",
+    "definition": "Discovered topic characterized by: pavement, marking, pavement marking, concrete, items.",
+    "keywords": [
+      "pavement",
+      "marking",
+      "pavement marking",
+      "concrete",
+      "items",
+      "base",
+      "roadway",
+      "asphalt",
+      "other",
+      "drainage"
+    ]
+  },
+  {
+    "id": "resurfacing_3",
+    "name": "Resurfacing & Shoulder",
+    "definition": "Discovered topic characterized by: resurfacing, shoulder, reconstruction, repairs, milling.",
+    "keywords": [
+      "resurfacing",
+      "shoulder",
+      "reconstruction",
+      "repairs",
+      "milling",
+      "milepost",
+      "shoulders",
+      "addition"
+    ]
+  },
+  {
+    "id": "preservation_4",
+    "name": "Preservation & Surface",
+    "definition": "Discovered topic characterized by: preservation, surface, counties, maintenance, milepost.",
+    "keywords": [
+      "preservation",
+      "surface",
+      "counties",
+      "maintenance",
+      "milepost",
+      "repair",
+      "repairs",
+      "concrete"
+    ]
+  },
+  {
+    "id": "river_5",
+    "name": "River & South",
+    "definition": "Discovered topic characterized by: river, south, grading, bridge no, federal.",
+    "keywords": [
+      "river",
+      "south",
+      "grading",
+      "bridge no",
+      "federal",
+      "river bridge",
+      "paving",
+      "north"
+    ]
+  },
+  {
+    "id": "near_6",
+    "name": "Near & Valley",
+    "definition": "Discovered topic characterized by: near, valley, south, district, begins.",
+    "keywords": [
+      "near",
+      "valley",
+      "south",
+      "district",
+      "begins",
+      "line near",
+      "line"
+    ]
+  },
+  {
+    "id": "interchange_7",
+    "name": "Interchange & Replacement",
+    "definition": "Discovered topic characterized by: interchange, replacement, milepost, mill, street.",
+    "keywords": [
+      "interchange",
+      "replacement",
+      "milepost",
+      "mill",
+      "street"
+    ]
+  },
+  {
+    "id": "creek_8",
+    "name": "Creek & Town",
+    "definition": "Discovered topic characterized by: creek, town, drain, lanes, federal.",
+    "keywords": [
+      "creek",
+      "town",
+      "drain",
+      "lanes",
+      "federal",
+      "bridge"
+    ]
+  }
+]
