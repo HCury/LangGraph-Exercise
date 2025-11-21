@@ -128,7 +128,6 @@ def tag_node(state: PipelineState, config: RunnableConfig | None = None) -> Pipe
 
     if threshold is None or infer:
         threshold = infer_threshold(confidences_for_threshold, quantile=quantile)
-        print(threshold)
     else:
         threshold = float(threshold)
 
