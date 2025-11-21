@@ -4,7 +4,7 @@ Local, keyword-grounded tagging workflow for the provided proposal descriptions.
 
 ## Contents
 - `taxonomy.json` — compact taxonomy with names, definitions, and keywords.
-- `tagger.py` — LangGraph pipeline that ingests the CSV, proposes tags, scores confidence, and makes publish/hold decisions.
+- `tagger_pipeline.py` — LangGraph pipeline that ingests the CSV, proposes tags, scores confidence, and makes publish/hold decisions.
 - `tagged_results.csv` — machine-readable output (one row per proposal).
 
 ## Taxonomy (derived from the sample data)
