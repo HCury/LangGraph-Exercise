@@ -32,9 +32,12 @@ The current algoirthm to determine confidence is as follows: The (number of tags
 With the confidence now set, we need a threshold of confidence to determine what should be approved and rejected. We do this by selecting the 60th Quantile of the sorted confidences. Anything above that confidence number is approved.
 Anything below that number is on hold. This makes our threshold dynamic to our data for scalability.
 
-## Running it
+## Running it'
+You will need to pip install the required packages. You can do this by doing:
+`pip install -r requirements.txt`
+
 ```bash
-python tagger.py --input proposals.csv --output tagged_results.csv --publish-threshold 0.35
+python graph/tagger-pipeline.py
 ```
 Adjust `--publish-threshold` (higher = stricter) or edit `taxonomy.json` keywords/definitions to tune behavior.
 
