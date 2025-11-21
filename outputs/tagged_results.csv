@@ -1,8 +1,8 @@
 proposalId,final_tags,matched_keywords,decision,confidence,evidence
-AL-1,Bridge & Replace; Pavement & Marking; River & South; Interchange & Replacement; Creek & Town,bridge; drain; drainage; grading; pavement; replace; replacement; river,publish,0.41,"Matched 'bridge' ... for constructing the Bridge Replacement (Grading, Drainage, Pavement, and Bridge Removal) on SR-14 ov"
+AL-1,Bridge & Replace; Pavement & Marking; River & South; Interchange & Replacement; Creek & Town,bridge; drain; drainage; grading; pavement; replace; replacement; river,hold,0.41,"Matched 'bridge' ... for constructing the Bridge Replacement (Grading, Drainage, Pavement, and Bridge Removal) on SR-14 ov"
 AK-1,Bridge & Replace; River & South; Near & Valley; Creek & Town,bridge; federal; replace; south,hold,0.31,Matched 'federal' ... This federally funded contract includes all necessary design and construction service
-AZ-1,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; River & South; Near & Valley; Interchange & Replacement; Creek & Town,asphalt; bridge; bridge deck; concrete; deck; extension; lanes; line; marking; mill; milling; other; pavement; pavement marking; paving; replace; roadway; shoulder; shoulders,publish,0.76,Matched 'line' ... Route (SR 64) between MP 185.79 and MP 205 from I-40 to Pipeline Road within the Kaibab National Forest. The work consists of Pavement rehab
-AZ-2,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Near & Valley; Interchange & Replacement,begins; marking; milepost; mill; other; pavement; pavement marking; replace,publish,0.49,Matched 'begins' ... located on Navajo Nation and Hopi lands in Coconino County begins at Tuba City and extends east along US 160 from Milepost 321.80 to Milepo
+AZ-1,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; River & South; Near & Valley; Interchange & Replacement; Creek & Town,asphalt; bridge; bridge deck; concrete; deck; lanes; line; marking; mill; milling; other; pavement; pavement marking; paving; replace; roadway; shoulder; shoulders; widening,publish,0.76,Matched 'line' ... Route (SR 64) between MP 185.79 and MP 205 from I-40 to Pipeline Road within the Kaibab National Forest. The work consists of Pavement rehab
+AZ-2,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Near & Valley; Interchange & Replacement,begins; marking; milepost; mill; other; pavement; pavement marking; replace,hold,0.49,Matched 'begins' ... located on Navajo Nation and Hopi lands in Coconino County begins at Tuba City and extends east along US 160 from Milepost 321.80 to Milepo
 AR-1,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; River & South; Interchange & Replacement; Creek & Town,asphalt; base; concrete; drain; drainage; items; maintenance; marking; mill; milling; pavement; pavement marking; paving; roadway; surface,publish,0.74,"Matched 'items' ... ECT CONSISTS OF CLEARING AND GRUBBING, REMOVAL AND DISPOSAL ITEMS, FLOWABLE SELECT MATERIAL, EARTHWORK, SELECT GRANULAR BACKFILL, AGGREGATE"
 CA-1,Bridge & Replace; River & South; Near & Valley,district; near; north; south; valley,hold,0.27,Matched 'near' ... CONSTRUCTION ON STATE HIGHWAY IN NEVADA COUNTY NEAR GRASS VALLEY FROM 0.2 MILE SOUTH OF LA BARR MEADOWS ROAD TO 0.1 MILE NORTH
 CO-1,,,hold,0.0,
@@ -17,7 +17,7 @@ IA-1,Bridge & Replace; Resurfacing & Shoulder; Interchange & Replacement; Creek 
 KS-1,Near & Valley,valley,hold,0.07,"Matched 'valley' ... FR OAK ST TO PLUM ST, 6TH ST FR OAK ST TO PLUM ST, AND KAW VALLEY RD AT 15TH ST AND 17TH ST INTERS IN THE CITY OF WAMEGO IN PT CO. LGTH IS"
 KY-1,,,hold,0.0,
 KY-2,,,hold,0.0,
-LA-1,Bridge & Replace; Preservation & Surface; River & South; Near & Valley; Creek & Town,begins; bridge; maintenance; north; south,publish,0.39,"Matched 'maintenance' ... MAINTENANCE MOWING, LITTER & TRASH COLLECTION AND DISPOSAL, AND TREE AND BRUSH C"
+LA-1,Bridge & Replace; Preservation & Surface; River & South; Near & Valley; Creek & Town,begins; bridge; maintenance; north; south,hold,0.39,"Matched 'maintenance' ... MAINTENANCE MOWING, LITTER & TRASH COLLECTION AND DISPOSAL, AND TREE AND BRUSH C"
 LA-2,,,hold,0.0,
 ME-1,,,hold,0.0,
 MD-1,Bridge & Replace; River & South; Creek & Town,bridge; bridge no,hold,0.21,"Matched 'bridge' ... Cleaning and Painting of Existing Bridge Nos. 1503900, 1504500, 1504603, 1504604, 1504900, and 1506800 on Various"
@@ -26,7 +26,7 @@ MA-1,Bridge & Replace; Interchange & Replacement,replace; replacement,hold,0.15,
 MA-2,,,hold,0.0,
 MA-3,Interchange & Replacement,interchange; street,hold,0.08,Matched 'street' ... Flood Relief on Route 20- Grafton Street (Route 122) Interchange to Flint Pond [SHREWSBURY -WORCESTER ]
 MI-1,Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Interchange & Replacement,addition; concrete; marking; pavement; pavement marking; reconstruction; street,hold,0.33,"Matched 'reconstruction' ... 1.80 mi of road reconstruction including concrete curb, gutter, sidewalk and ramps, storm sewer,"
-MN-1,Bridge & Replace; River & South; Near & Valley; Creek & Town,bridge; bridge no; grading; north; river; south,publish,0.35,"Matched 'north' ... ow Medicine County on USC Service Rd (Old TH 67) from 5250' North of Yellow Medicine River to 350' South of Yellow Medicine River, and on TH"
+MN-1,Bridge & Replace; River & South; Near & Valley; Creek & Town,bridge; bridge no; grading; north; river; south,hold,0.35,"Matched 'north' ... ow Medicine County on USC Service Rd (Old TH 67) from 5250' North of Yellow Medicine River to 350' South of Yellow Medicine River, and on TH"
 MS-1,Bridge & Replace; River & South; Near & Valley; Creek & Town,bridge; drain; federal; lanes; south,hold,0.32,"Matched 'drain' ... Grade, Drain, Bridge & Pave 4 Lanes on SR 7 from CR 370 to 0.4 miles south of SR 6, kno"
 MO-1,Preservation & Surface; Near & Valley,line; line near; near; surface,hold,0.16,"Matched 'surface' ... Job JNW0042 Route 69 CLINTON County. Resurface from Route 116 to the Clay County line near Lawson, the total length of"
 MO-2,Preservation & Surface; River & South; Near & Valley,south; surface,hold,0.21,"Matched 'surface' ... Job JNW0089 Route 13, BU 36 CALDWELL, DAVIESS County. Resurface and ADA improvement on Route 13 from Route 6 in Gallatin to Hamilton sou"
@@ -35,7 +35,7 @@ NE-1,Preservation & Surface,preservation,hold,0.07,Matched 'preservation' ... TE
 NE-2,Pavement & Marking; Interchange & Replacement; Creek & Town,drain; drainage; street,hold,0.21,Matched 'drainage' ... I-80 DRAINAGE AT 96TH STREET
 NJ-1,Bridge & Replace; River & South; Creek & Town,bridge; federal; grading; paving; river; river bridge; town,hold,0.27,"Matched 'river bridge' ... Route 4 Hackensack River Bridge Contract No. 006023460; Grading, Paving and Structures City Of Hack"
 NJ-2,Pavement & Marking; Preservation & Surface; River & South; Near & Valley,concrete; counties; maintenance; repair; south,hold,0.31,"Matched 'maintenance' ... Maintenance Concrete Structural Repair Contract, South - 2026; Various Locations"
-NJ-3,Bridge & Replace; Resurfacing & Shoulder; Preservation & Surface; Interchange & Replacement; Creek & Town,bridge; milepost; repair; repairs; resurfacing,publish,0.39,Matched 'bridge' ... Bridge Repairs and Resurfacing; Milepost 126 to 172 (2026)
+NJ-3,Bridge & Replace; Resurfacing & Shoulder; Preservation & Surface; Interchange & Replacement; Creek & Town,bridge; milepost; repair; repairs; resurfacing,hold,0.39,Matched 'bridge' ... Bridge Repairs and Resurfacing; Milepost 126 to 172 (2026)
 NM-1,Bridge & Replace; Pavement & Marking; Creek & Town,bridge; roadway,hold,0.24,"Matched 'bridge' ... Bridge/Roadway New Const, Roadway Recon, Lighting, ITS"
 NM-2,Bridge & Replace; Pavement & Marking,roadway,hold,0.14,Matched 'roadway' ... Roadway Rehabilitation
 NY-1,Bridge & Replace; Preservation & Surface; Creek & Town,bridge; maintenance,hold,0.21,"Matched 'bridge' ... BRIDGE MAINTENANCE & REHAB - Rts I-87, 907C, 907M & 909C, City of New York"
@@ -45,7 +45,7 @@ NY-4,Bridge & Replace; Interchange & Replacement; Creek & Town,bridge; interchan
 NC-1,Pavement & Marking; River & South; Creek & Town,drain; drainage; grading; paving,hold,0.22,"Matched 'grading' ... GRADING, DRAINAGE, PAVING, SIGNALS, AND CULVERTS."
 NC-2,Resurfacing & Shoulder; Interchange & Replacement,mill; milling; reconstruction; resurfacing; shoulder,hold,0.17,"Matched 'milling' ... MILLING, RESURFACING, AND SHOULDER RECONSTRUCTION."
 NC-3,Resurfacing & Shoulder,resurfacing,hold,0.07,Matched 'resurfacing' ... RESURFACING
-ND-1,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Interchange & Replacement; Creek & Town,bridge; bridge deck; concrete; deck; mill; milling; pavement; repair,publish,0.47,Matched 'concrete' ... CONCRETE PAVEMENT REPAIR; MILLING AND HMA; STRUCTURE REPAIR; BRIDGE DECK OVERLAY
+ND-1,Bridge & Replace; Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Interchange & Replacement; Creek & Town,bridge; bridge deck; concrete; deck; mill; milling; pavement; repair,hold,0.47,Matched 'concrete' ... CONCRETE PAVEMENT REPAIR; MILLING AND HMA; STRUCTURE REPAIR; BRIDGE DECK OVERLAY
 ND-2,Pavement & Marking; River & South; Creek & Town,base; drain; grading; marking; pavement,hold,0.23,Matched 'grading' ... GRADING; SALVAGED BASE; PCC PAVEMENT; STORM DRAIN; LIGHTING; SIGNALS; MARKING; S
 NS-1,,,hold,0.0,
 OH-1,Pavement & Marking; Resurfacing & Shoulder; Preservation & Surface; Creek & Town,marking; pavement; pavement marking; repair; repairs; resurfacing; town,hold,0.32,"Matched 'town' ... THE VILLAGES OF BETHESDA AND BARNESVILLE, GOSHEN AND WARREN TOWNSHIPS, BELMONT COUNTY, OHIO, IN ACCORDANCE WITH PLANS AND SPECIFICATIONS BY"
@@ -57,7 +57,7 @@ SC-1,River & South; Near & Valley,river; south,hold,0.15,Matched 'south' ... S-2
 SC-2,Preservation & Surface,preservation,hold,0.07,Matched 'preservation' ... 2026 Aiken County Preservation
 TN-1,Pavement & Marking; Creek & Town,drain; drainage,hold,0.14,Matched 'drainage' ... The construction of a small drainage structure on S.R. 111 at L.M. 15.76.
 TN-2,Near & Valley,line; near,hold,0.08,Matched 'line' ... rtation System (ITS) on I-40 from the Shelby/Fayette County line to near I-840 in Dickson County.
-VA-1,Bridge & Replace; Creek & Town,bridge; extension,hold,0.15,Matched 'extension' ... DECEL LANE EXTENSION & BRIDGE WIDENING
+VA-1,Bridge & Replace; Creek & Town,bridge; widening,hold,0.15,Matched 'bridge' ... DECEL LANE EXTENSION & BRIDGE WIDENING
 VA-2,Preservation & Surface,surface,hold,0.07,Matched 'surface' ... 2026 SURFACE TREATMENT - SECONDARY
 WA-1,Bridge & Replace; River & South; Creek & Town,bridge; replace; river; river bridge,hold,0.25,Matched 'river bridge' ... E FORK LEWIS RIVER BRIDGE NB - REPLACE BRIDGE
 WA-2,,,hold,0.0,
