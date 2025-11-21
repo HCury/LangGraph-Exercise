@@ -51,3 +51,6 @@ python generate_taxonomy.py
 - The workflow is deterministic and local (no external services or keys).
 - Keyword matching is intentionally simple to keep decisions inspectable. Very terse descriptions without matching terms will be held.
 - To add tags, update `taxonomy.json`; the script will automatically enforce the new taxonomy on the next run.
+  
+![chrome_9NcyZD3Sqm](https://github.com/user-attachments/assets/76782f17-6a1b-4f37-99f9-fb6b79d957ff)
+
