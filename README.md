@@ -23,6 +23,15 @@ Graph: `ingest → tag → write → END`
 - **tag**: keyword match per taxonomy entry, compute confidence, decide publish/hold using the threshold.
 - **write**: emit `tagged_results.csv` with `proposalId`, `final_tags`, `decision`, `confidence`, and an evidence snippet.
 
+## Confidence:
+How is confidence determined?:
+The current algoirthm to determine confidence is as follows: The (number of tags we matched / the number of taxonomies categories we have) + (all the tag hits / the total number of possible words) then we take the average.
+`confidence = round(min(1.0, (((len(tag_results)) / 8) + (len(all_hits) / total_words)) / 2), 2)`
+
+## Threhold:
+With the confidence now set, we need a threshold of confidence to determine what should be approved and rejected. We do this by selecting the 60th Quantile of the sorted confidences. Anything above that confidence number is approved.
+Anything below that number is on hold. This makes our threshold dynamic to our data for scalability.
+
 ## Running it
 ```bash
 python tagger.py --input proposals.csv --output tagged_results.csv --publish-threshold 0.35
