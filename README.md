@@ -28,7 +28,7 @@ How is confidence determined?:
 The current algoirthm to determine confidence is as follows: The (number of tags we matched / the number of taxonomies categories we have) + (all the tag hits / the total number of possible words) then we take the average.
 `confidence = round(min(1.0, (((len(tag_results)) / 8) + (len(all_hits) / total_words)) / 2), 2)`
 
-## Threhold:
+## Threshold:
 With the confidence now set, we need a threshold of confidence to determine what should be approved and rejected. We do this by selecting the 60th Quantile of the sorted confidences. Anything above that confidence number is approved.
 Anything below that number is on hold. This makes our threshold dynamic to our data for scalability.
 
