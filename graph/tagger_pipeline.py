@@ -92,7 +92,23 @@ def tag_proposal(description: str, taxonomy: List[dict]) -> Tuple[List[TagResult
             tag_results.append(TagResult(entry["id"], entry["name"], hits))
 
     total_words = sum(len(entry["keywords"]) for entry in taxonomy)
-    confidence = round(min(1.0, (((len(tag_results)) / 8) + (len(all_hits) / total_words)) / 2), 2)
+    # NEW CONFIDENCE SCORING
+    num_categories = len(tag_results)
+    num_taxonomy = len(taxonomy)
+
+    coverage = num_categories / max(1, num_taxonomy)
+
+    distinct_kw = len(set(kw for kw, _ in all_hits))
+    density = min(1.0, len(all_hits) / 5)
+    diversity = min(1.0, distinct_kw / 5)
+
+    confidence = round(
+        0.5 * coverage +
+        0.3 * density +
+        0.2 * diversity,
+        2
+    )
+
     evidence = extract_evidence(text, all_hits)
 
     return tag_results, confidence, evidence
