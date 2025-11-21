@@ -34,12 +34,13 @@ Anything below that number is on hold. This makes our threshold dynamic to our d
 
 ## Running it'
 You will need to pip install the required packages. You can do this by doing:
-`pip install -r requirements.txt`
-
+```bash
+pip install -r requirements.txt
+```
+Once installed you can rune the pipeline: 
 ```bash
 python graph/tagger-pipeline.py
 ```
-Adjust `--publish-threshold` (higher = stricter) or edit `taxonomy.json` keywords/definitions to tune behavior.
 
 ## Notes and limitations
 - The workflow is deterministic and local (no external services or keys).
