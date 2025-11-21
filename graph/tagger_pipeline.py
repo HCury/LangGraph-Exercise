@@ -5,11 +5,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Tuple, TypedDict
 
+from dotenv import load_dotenv
 from langgraph.graph import END, StateGraph
 from langgraph.types import RunnableConfig
+from langchain_openai import ChatOpenAI
 
-# Helper structures ----------------------------------------------------------
+# Load environment variables -------------------------------------------------
+load_dotenv()  # Loads OPENAI_API_KEY from .env if present
 
+
+# ---------------------------------------------------------------------------
+# Data Structures
+# ---------------------------------------------------------------------------
 
 @dataclass
 class TagResult:
@@ -21,28 +28,40 @@ class TagResult:
 class PipelineState(TypedDict, total=False):
     proposals: List[Dict[str, str]]
     taxonomy: List[dict]
+    current_index: int
+    current_proposal: Dict[str, str]
+    tag_results: List[TagResult]
+    confidence: float
+    evidence: str
+    decision: str
     results: List[Dict[str, str]]
+    threshold: float
+    needs_refinement: bool
+    refinement_attempts: int
 
 
-# Core logic -----------------------------------------------------------------
-
+# ---------------------------------------------------------------------------
+# Helper Functions
+# ---------------------------------------------------------------------------
 
 def load_taxonomy(path: Path) -> List[dict]:
     with path.open() as f:
         return json.load(f)
 
 
-def match_keywords(text: str, keyword: str) -> List[int]:
+def match_keywords(text: str, kw: str) -> List[int]:
     positions = []
     start = 0
-    lower_text = text.lower()
-    lower_kw = keyword.lower()
+    t = text.lower()
+    k = kw.lower()
+
     while True:
-        idx = lower_text.find(lower_kw, start)
+        idx = t.find(k, start)
         if idx == -1:
             break
         positions.append(idx)
-        start = idx + len(lower_kw)
+        start = idx + len(k)
+
     return positions
 
 
@@ -58,161 +77,252 @@ def extract_evidence(text: str, positions: List[Tuple[str, int]]) -> str:
 
 def tag_proposal(description: str, taxonomy: List[dict]) -> Tuple[List[TagResult], float, str]:
     text = description or ""
-    lower_text = text.lower()
+    lower = text.lower()
+
     tag_results: List[TagResult] = []
-    all_hits: List[Tuple[str, int]] = []
+    all_hits = []
 
     for entry in taxonomy:
-        hits_for_entry: List[Tuple[str, int]] = []
+        hits = []
         for kw in entry["keywords"]:
-            for pos in match_keywords(lower_text, kw):
-                hits_for_entry.append((kw, pos))
+            for pos in match_keywords(lower, kw):
+                hits.append((kw, pos))
                 all_hits.append((kw, pos))
-        if hits_for_entry:
-            tag_results.append(TagResult(entry["id"], entry["name"], hits_for_entry))
+        if hits:
+            tag_results.append(TagResult(entry["id"], entry["name"], hits))
 
     total_words = sum(len(entry["keywords"]) for entry in taxonomy)
     confidence = round(min(1.0, (((len(tag_results)) / 8) + (len(all_hits) / total_words)) / 2), 2)
     evidence = extract_evidence(text, all_hits)
+
     return tag_results, confidence, evidence
 
 
-def infer_threshold(confidences: List[float], quantile: float, floor: float = 0.35, ceiling: float = 1.0) -> float:
-    """Pick a data-driven threshold from confidence samples at the given quantile."""
-    if not confidences:
-        return floor
-    sorted_vals = sorted(confidences)
-    idx = int(min(len(sorted_vals) - 1, max(0, quantile * (len(sorted_vals) - 1))))
-    value = sorted_vals[idx]
-    return float(max(floor, min(ceiling, value)))
+def decide_publish_llm(llm: ChatOpenAI, tags: List[TagResult], confidence: float, threshold: float) -> str:
+    tag_names = ", ".join([t.tag_name for t in tags])
+
+    prompt = f"""
+You are an agent deciding if a proposal should be published.
+
+Tags found: {tag_names}
+Confidence score: {confidence}
+Threshold: {threshold}
+
+Should we PUBLISH or HOLD this proposal?
+Respond with exactly one word: "publish" or "hold".
+"""
+
+    resp = llm.invoke(prompt)
+    text = resp.content.lower()
+    return "publish" if "publish" in text else "hold"
 
 
-def decide_publish(tags: List[TagResult], confidence: float, threshold: float) -> str:
-    if tags and confidence >= threshold:
-        return "publish"
-    return "hold"
+def refine_tags_llm(llm: ChatOpenAI, description: str, tag_results: List[TagResult], confidence: float) -> bool:
+    tag_names = ", ".join([t.tag_name for t in tag_results])
+
+    prompt = f"""
+You are reviewing tagging results.
+
+Description: {description}
+Existing tags: {tag_names}
+Confidence: {confidence}
+
+Should I refine the tagging (answer "yes") or proceed (answer "no")?
+Respond with exactly one word: "yes" or "no".
+"""
+
+    resp = llm.invoke(prompt)
+    return "yes" in resp.content.lower()
 
 
-# LangGraph nodes ------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# LangGraph Nodes
+# ---------------------------------------------------------------------------
 
+def ingest_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    cfg = config["configurable"]
 
-def ingest_node(state: PipelineState, config: RunnableConfig | None = None) -> PipelineState:
-    config = config or {}
-    input_path = Path(config.get("input_path", "inputs/proposals.csv"))
-    taxonomy_path = Path(config.get("taxonomy_path", "inputs/taxonomy/taxonomy.json"))
+    input_path = Path(cfg["input_path"])
+    taxonomy_path = Path(cfg["taxonomy_path"])
+
+    with input_path.open() as f:
+        proposals = list(csv.DictReader(f))
 
     taxonomy = load_taxonomy(taxonomy_path)
-    with input_path.open() as f:
-        reader = csv.DictReader(f)
-        proposals = list(reader)
 
-    return {"proposals": proposals, "taxonomy": taxonomy}
+    return {
+        "proposals": proposals,
+        "taxonomy": taxonomy,
+        "current_index": 0,
+        "results": [],
+        "refinement_attempts": 0,
+    }
 
 
-def tag_node(state: PipelineState, config: RunnableConfig | None = None) -> PipelineState:
-    config = config or {}
-    threshold = config.get("publish_threshold")
-    infer = bool(config.get("infer_threshold", False))
-    quantile = float(config.get("threshold_quantile", 0.6))
-    taxonomy = state["taxonomy"]
+def tag_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    idx = state["current_index"]
     proposals = state["proposals"]
-    results: List[Dict[str, str]] = []
-    confidences_for_threshold: List[float] = []
+    taxonomy = state["taxonomy"]
 
-    tagged = []
-    for row in proposals:
-        tags, confidence, evidence = tag_proposal(row["description"], taxonomy)
-        if tags:
-            confidences_for_threshold.append(confidence)
-        tagged.append((row, tags, confidence, evidence))
+    if idx >= len(proposals):
+        # Nothing left to tag; just pass state through
+        return state
 
-    if threshold is None or infer:
-        threshold = infer_threshold(confidences_for_threshold, quantile=quantile)
+    proposal = proposals[idx]
+    tags, confidence, evidence = tag_proposal(proposal["description"], taxonomy)
+
+    return {
+        **state,
+        "current_proposal": proposal,
+        "tag_results": tags,
+        "confidence": confidence,
+        "evidence": evidence,
+    }
+
+
+def agent_decision_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+    cfg = config["configurable"]
+    threshold = float(cfg.get("publish_threshold", 0.5))
+    tags = state["tag_results"]
+    confidence = state["confidence"]
+    desc = state["current_proposal"]["description"]
+
+    # Only allow ONE refinement attempt per proposal
+    if state.get("refinement_attempts", 0) >= 1:
+        needs_refinement = False
     else:
-        threshold = float(threshold)
+        needs_refinement = refine_tags_llm(llm, desc, tags, confidence)
 
-    for row, tags, confidence, evidence in tagged:
-        decision = decide_publish(tags, confidence, threshold)
-        tag_names = "; ".join(tr.tag_name for tr in tags)
-        matched_keywords = "; ".join(sorted({kw for tr in tags for kw, _ in tr.hits}))
-        results.append(
-            {
-                "proposalId": row["proposalId"],
-                "final_tags": tag_names,
-                "matched_keywords": matched_keywords,
-                "decision": decision,
-                "confidence": confidence,
-                "evidence": evidence,
-            }
-        )
+    decision = decide_publish_llm(llm, tags, confidence, threshold)
 
-    return {"results": results}
+    return {
+        **state,
+        "needs_refinement": needs_refinement,
+        "decision": decision,
+    }
 
 
-def write_output_node(state: PipelineState, config: RunnableConfig | None = None) -> PipelineState:
-    config = config or {}
-    output_path = Path(config.get("output_path", "outputs/tagged_results.csv"))
+def refinement_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    proposal = state["current_proposal"]
+    taxonomy = state["taxonomy"]
+
+    tags, confidence, evidence = tag_proposal(proposal["description"], taxonomy)
+
+    return {
+        **state,
+        "tag_results": tags,
+        "confidence": confidence,
+        "evidence": evidence,
+        "needs_refinement": False,
+        "refinement_attempts": state.get("refinement_attempts", 0) + 1,
+    }
+
+
+def write_result_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    cfg = config["configurable"]
+    output_path = Path(cfg["output_path"])
+
+    results = state["results"]
+    proposal = state["current_proposal"]
+
+    tag_names = "; ".join(tr.tag_name for tr in state["tag_results"])
+    matched_keywords = "; ".join(sorted({kw for tr in state["tag_results"] for kw, _ in tr.hits}))
+
+    results.append(
+        {
+            "proposalId": proposal["proposalId"],
+            "final_tags": tag_names,
+            "matched_keywords": matched_keywords,
+            "decision": state["decision"],
+            "confidence": state["confidence"],
+            "evidence": state["evidence"],
+        }
+    )
+
+    # Write entire results list to CSV on each write (simple, idempotent)
     output_fields = ["proposalId", "final_tags", "matched_keywords", "decision", "confidence", "evidence"]
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=output_fields, delimiter=",")
+        writer = csv.DictWriter(f, fieldnames=output_fields)
         writer.writeheader()
-        writer.writerows(state["results"])
+        writer.writerows(results)
 
-    return {}
+    return {**state, "results": results}
 
 
-# Graph assembly -------------------------------------------------------------
+def next_proposal_node(state: PipelineState, config: RunnableConfig) -> PipelineState:
+    # Move to next proposal and reset refinement counter for the new one
+    return {
+        **state,
+        "current_index": state["current_index"] + 1,
+        "refinement_attempts": 0,
+    }
 
+
+def end_condition(state: PipelineState) -> bool:
+    return state["current_index"] >= len(state["proposals"])
+
+
+# ---------------------------------------------------------------------------
+# Build LangGraph Graph
+# ---------------------------------------------------------------------------
 
 def build_graph() -> StateGraph:
     graph = StateGraph(PipelineState)
+
     graph.add_node("ingest", ingest_node)
     graph.add_node("tag", tag_node)
-    graph.add_node("write", write_output_node)
+    graph.add_node("agent_decision", agent_decision_node)
+    graph.add_node("refine", refinement_node)
+    graph.add_node("write", write_result_node)
+    graph.add_node("next", next_proposal_node)
 
     graph.add_edge("ingest", "tag")
-    graph.add_edge("tag", "write")
-    graph.add_edge("write", END)
+    graph.add_edge("tag", "agent_decision")
+
+    graph.add_conditional_edges(
+        "agent_decision",
+        lambda s: "refine" if s.get("needs_refinement", False) else "write",
+    )
+
+    graph.add_edge("refine", "tag")
+    graph.add_edge("write", "next")
+
+    graph.add_conditional_edges(
+        "next",
+        lambda s: END if end_condition(s) else "tag",
+    )
+
     graph.set_entry_point("ingest")
     return graph
 
 
+# ---------------------------------------------------------------------------
+# Entrypoint
+# ---------------------------------------------------------------------------
+
 def main():
-    parser = argparse.ArgumentParser(description="LangGraph tagging pipeline.")
-    parser.add_argument("--input", type=Path, default=Path("inputs/proposals.csv"), help="Input proposals CSV")
-    parser.add_argument("--output", type=Path, default=Path("outputs/tagged_results.csv"), help="Output CSV path")
-    parser.add_argument(
-        "--taxonomy", type=Path, default=Path("inputs/taxonomy/taxonomy.json"), help="Taxonomy definition file (JSON)"
-    )
-    parser.add_argument(
-        "--infer-threshold",
-        action="store_true",
-        help="Infer publish threshold from confidence distribution instead of using a fixed value.",
-    )
-    parser.add_argument(
-        "--threshold-quantile",
-        type=float,
-        default=0.6,
-        help="Quantile of confidence scores to use when inferring threshold (0..1).",
-    )
-    parser.add_argument(
-        "--publish-threshold",
-        type=float,
-        default=None,
-        help="Fixed confidence required to publish; otherwise the proposal is held. Leave unset to infer from data.",
-    )
+    parser = argparse.ArgumentParser(description="Agentic LangGraph tagging pipeline (OpenAI).")
+    parser.add_argument("--input", type=Path, default=Path("inputs/proposals.csv"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/tagged_results.csv"))
+    parser.add_argument("--taxonomy", type=Path, default=Path("inputs/taxonomy/taxonomy.json"))
+    parser.add_argument("--publish-threshold", type=float, default=0.5)
     args = parser.parse_args()
 
     app = build_graph().compile()
     app.invoke(
         {},
         config={
-            "input_path": args.input,
-            "output_path": args.output,
-            "taxonomy_path": args.taxonomy,
-            "publish_threshold": args.publish_threshold,
-            "infer_threshold": args.infer_threshold,
-            "threshold_quantile": args.threshold_quantile,
+            "configurable": {
+                "input_path": str(args.input),
+                "output_path": str(args.output),
+                "taxonomy_path": str(args.taxonomy),
+                "publish_threshold": args.publish_threshold,
+            },
+            # Allow enough steps for looping over many proposals
+            "recursion_limit": 1000,
         },
     )
 
