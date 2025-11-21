@@ -42,6 +42,11 @@ Once installed you can rune the pipeline:
 python graph/tagger-pipeline.py
 ```
 
+If you have a new set of data, you can create a new `taxonomy.json` by running:
+```bash
+python generate_taxonomy.py
+```
+
 ## Notes and limitations
 - The workflow is deterministic and local (no external services or keys).
 - Keyword matching is intentionally simple to keep decisions inspectable. Very terse descriptions without matching terms will be held.
